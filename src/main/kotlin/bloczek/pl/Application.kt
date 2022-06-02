@@ -118,10 +118,7 @@ fun Application.mainModule() {
     DatabaseFactory.connectAndMigrate(environment.config)
 
     install(Routing) {
-        authenticate("auth-jwt") {
-            productsRoutes()
-        }
-
+        productsRoutes()
         categoriesRoutes()
         authenticationRoutes()
     }
