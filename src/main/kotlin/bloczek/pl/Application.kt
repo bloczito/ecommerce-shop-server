@@ -33,6 +33,18 @@ fun Application.mainModule() {
         modules(diModule)
     }
 
+    install(CORS) {
+        allowHost("localhost:3000") // frontendHost might be "*"
+        allowMethod(HttpMethod.Put)
+        allowMethod(HttpMethod.Delete)
+        allowHeader(HttpHeaders.Authorization)
+        allowHeader(HttpHeaders.ContentType)
+//        allowHeader(HttpHeaders.AccessControlAllowOrigin)
+//        allowNonSimpleContentTypes = true
+//        allowCredentials = true
+//        allowSameOrigin = true
+    }
+
     val secret = environment.config.property("jwt.secret").getString()
     val issuer = environment.config.property("jwt.issuer").getString()
     val audience = environment.config.property("jwt.audience").getString()
@@ -99,23 +111,14 @@ fun Application.mainModule() {
 
     install(Resources)
 
-    install(CORS) {
-        allowMethod(HttpMethod.Options)
-        allowMethod(HttpMethod.Put)
-        allowMethod(HttpMethod.Delete)
-        allowMethod(HttpMethod.Patch)
-        allowHeader(HttpHeaders.Authorization)
-        allowHeader(HttpHeaders.AccessControlAllowOrigin)
-        allowNonSimpleContentTypes = true
-        allowCredentials = true
-        allowSameOrigin = true
-        allowHost("*", listOf("http", "https")) // frontendHost might be "*"
-    }
+
 
     DatabaseFactory.connectAndMigrate(environment.config)
 
     install(Routing) {
-        productsRoutes()
+        authenticate("auth-jwt") {
+            productsRoutes()
+        }
         categoriesRoutes()
         authenticationRoutes()
     }

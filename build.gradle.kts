@@ -58,8 +58,7 @@ dependencies {
     // Auth
     implementation("io.ktor:ktor-server-auth:$ktor_version")
     implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
-//    implementation("com.google.api-client:google-api-client:1.33.0")
-    implementation("com.google.apis:google-api-services-people:v1-rev20210903-1.32.1")
+
     // HttpClient
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
