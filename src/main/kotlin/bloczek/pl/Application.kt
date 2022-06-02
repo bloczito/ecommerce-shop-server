@@ -21,6 +21,7 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.apache.http.protocol.HTTP
 import org.koin.core.context.startKoin
 
 
@@ -52,6 +53,21 @@ fun Application.mainModule() {
                     clientId = System.getenv("GOOGLE_CLIENT_ID"),
                     clientSecret = System.getenv("GOOGLE_CLIENT_SECRET"),
                     defaultScopes = listOf("https://www.googleapis.com/auth/userinfo.profile")
+                )
+            }
+            client = HttpClient(CIO)
+        }
+
+        oauth ("auth-oauth-github") {
+            urlProvider = { "http://localhost:8080/authenticated/github" }
+            providerLookup = {
+                OAuthServerSettings.OAuth2ServerSettings(
+                    name = "github",
+                    authorizeUrl = "https://github.com/login/oauth/authorize",
+                    accessTokenUrl = "https://github.com/login/oauth/access_token",
+                    requestMethod = HttpMethod.Post,
+                    clientId = System.getenv("GITHUB_CLIENT_ID"),
+                    clientSecret = System.getenv("GITHUB_CLIENT_SECRET")
                 )
             }
             client = HttpClient(CIO)

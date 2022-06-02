@@ -25,7 +25,8 @@ import kotlinx.serialization.Serializable
 import org.koin.java.KoinJavaComponent
 import java.util.*
 
-val GOOGLE_API_INFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
+const val GOOGLE_API_INFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
+const val GITHUB_API_INFO_URL = "https://api.github.com/user"
 
 
 val asd = HttpClient(CIO) {
@@ -57,7 +58,7 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
                     }
                 }.body()
 
-                val user = userService.getOrCreateUser(userInfo.id, userInfo.name, AccountType.GOOGLE);
+                val user = userService.getOrCreateUser(userInfo.id, userInfo.name, AccountType.GOOGLE)
 
                 val token = JWT.create()
                     .withAudience(audience)
@@ -75,22 +76,65 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
                         expirationTime.toInt()
                     )
                 )
-                call.response.headers.append("Authorization", "Bearer $token")
+
                 call.respondRedirect("http://localhost:3000")
             } ?: run {
                 call.respond(HttpStatusCode.Unauthorized, "ELO")
             }
         }
-
     }
+
+    authenticate ("auth-oauth-github") {
+        get("/login/github") {}
+
+        get("/authenticated/github") {
+            val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
+
+            principal?.let {
+                val userInfo: GithubUserInfo = httpClient.get(GITHUB_API_INFO_URL) {
+                    headers {
+                        append(HttpHeaders.Authorization, "token ${principal.accessToken}")
+                    }
+                }.body()
+
+                val user = userService.getOrCreateUser(userInfo.id, userInfo.name ?: userInfo.login, AccountType.GITHUB)
+
+                val token = JWT.create()
+                    .withAudience(audience)
+                    .withIssuer(issuer)
+                    .withClaim("username", user.username)
+                    .withExpiresAt(Date(System.currentTimeMillis() + expirationTime))
+                    .sign(Algorithm.HMAC256(secret))
+
+                call.response.headers.append(HttpHeaders.AccessControlExposeHeaders, "Set-Cookie")
+                call.response.cookies.append(
+                    Cookie(
+                        "auth-token",
+                        token,
+                        CookieEncoding.URI_ENCODING,
+                        expirationTime.toInt(),
+                        path = "/"
+                    )
+                )
+
+                call.respondRedirect("http://localhost:3000")
+            } ?: run {
+                call.respond(HttpStatusCode.Unauthorized, "NAURA")
+            }
+        }
+    }
+
 }
 
 @Serializable
 data class UserInfo(
     val id: String,
     val name: String,
-//    val givenName: String,
-//    val familyName: String,
-    val picture: String,
-    val locale: String
+)
+
+@Serializable
+data class GithubUserInfo(
+    val id: String,
+    val login: String,
+    val name: String?,
 )

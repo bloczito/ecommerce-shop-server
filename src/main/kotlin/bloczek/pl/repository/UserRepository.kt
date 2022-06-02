@@ -23,9 +23,10 @@ class UserRepository {
             .elementAtOrNull(0)
     }
 
-    suspend fun createUser(username: String, name: String, accountType: AccountType): Int = dbQuery {
+    suspend fun createUser(externalId: String, name: String, accountType: AccountType): Int = dbQuery {
         Users.insert {
-            it[Users.username] = username
+            it[Users.username] = "${accountType.serviceName}-${externalId}"
+            it[Users.externalId] = externalId
             it[Users.name] = name
             it[Users.accountType] = accountType
         }[Users.id]
@@ -35,6 +36,7 @@ class UserRepository {
     private fun mapUser(row: ResultRow) = User(
         id = row[Users.id],
         username = row[Users.username],
+        externalId = row[Users.externalId],
         name = row[Users.name],
         accountType = row[Users.accountType]
     )

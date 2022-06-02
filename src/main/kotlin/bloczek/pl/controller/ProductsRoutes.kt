@@ -6,6 +6,8 @@ import bloczek.pl.service.ProductService
 import io.ktor.http.*
 import io.ktor.resources.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -29,6 +31,13 @@ fun Route.productsRoutes() {
     val productService: ProductService by inject(ProductService::class.java)
 
     get<ProductsRoute> {
+        val user = call.principal<JWTPrincipal>()
+
+        if (user != null) {
+            println(user.getClaim("username", String::class))
+            println(user.payload)
+        }
+
         call.respond(productService.getProducts(
             it.category,
             it.subcategory,

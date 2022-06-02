@@ -10,6 +10,7 @@ object Users: Table() {
     val id: Column<Int> = integer("user_id").autoIncrement()
 
     val username: Column<String> = varchar("username", 255)
+    val externalId: Column<String> = varchar("external_id", 255)
     val name: Column<String> = varchar("name", 255)
     val accountType = postgresEnumeration<AccountType>("account_type", "AccountType")
 
@@ -21,6 +22,7 @@ object Users: Table() {
 data class User (
     val id: Int,
     val username: String,
+    val externalId: String,
     val name: String? = null,
     val accountType: AccountType
 )
