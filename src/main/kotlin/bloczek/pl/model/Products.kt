@@ -17,6 +17,8 @@ object Products : Table() {
 
     val category = postgresEnumeration<Category>("category", "Category")
     val subcategory = postgresEnumeration<Subcategory>("subcategory", "Subcategory")
+
+    override val primaryKey = PrimaryKey(id, name="PK_Products_Id")
 }
 
 data class Product(
