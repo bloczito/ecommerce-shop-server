@@ -49,6 +49,15 @@ class ProductRepository {
             }.elementAtOrNull(0)
     }
 
+    suspend fun getRandomProducts(): List<Product> = dbQuery {
+        (Products leftJoin Brands)
+            .selectAll()
+            .orderBy(Random())
+            .limit(20)
+            .map { mapProduct(it) }
+
+    }
+
     private fun mapProduct(row: ResultRow) = Product(
         id = row[Products.id],
         name = row[Products.name],
