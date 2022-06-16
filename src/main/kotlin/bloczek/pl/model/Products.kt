@@ -13,6 +13,7 @@ object Products : Table() {
 
     val description: Column<String> = text("description")
     val price: Column<BigDecimal> = decimal("price", 6, 2)
+    val url: Column<String> = varchar("url", 255)
     val brandId: Column<Int> = reference("brand_id", Brands.id)
 
     val category = postgresEnumeration<Category>("category", "Category")
@@ -25,6 +26,7 @@ data class Product(
     val id: Int,
     val name: String,
     val price: Double,
+    val url: String,
     val description: String? = null,
     val brand: Brand,
     val category: Category,

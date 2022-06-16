@@ -40,7 +40,9 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
 
 
     authenticate("auth-oauth-google") {
-        get("/login") {}
+        get("/login") {
+            call.parameters.apply {  }
+        }
 
         get("/authenticated") {
             val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
@@ -58,6 +60,7 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
                     .withAudience(audience)
                     .withIssuer(issuer)
                     .withClaim("username", user.username)
+                    .withClaim("userId", user.id)
                     .withExpiresAt(Date(System.currentTimeMillis() + expirationTime))
                     .sign(Algorithm.HMAC256(secret))
 
@@ -97,6 +100,7 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
                     .withAudience(audience)
                     .withIssuer(issuer)
                     .withClaim("username", user.username)
+                    .withClaim("userId", user.id)
                     .withExpiresAt(Date(System.currentTimeMillis() + expirationTime))
                     .sign(Algorithm.HMAC256(secret))
 

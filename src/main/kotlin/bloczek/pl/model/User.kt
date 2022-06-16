@@ -11,7 +11,12 @@ object Users: Table() {
 
     val username: Column<String> = varchar("username", 255)
     val externalId: Column<String> = varchar("external_id", 255)
-    val name: Column<String> = varchar("name", 255)
+    val name: Column<String?> = varchar("name", 255).nullable()
+
+    val city: Column<String?> = varchar("city", 255).nullable()
+    val street: Column<String?> = varchar("street", 255).nullable()
+    val postcode: Column<String?> = varchar("postcode", 255).nullable()
+
     val accountType = postgresEnumeration<AccountType>("account_type", "AccountType")
 
     override val primaryKey = PrimaryKey(id, name = "PK_Users_Id")
@@ -24,5 +29,8 @@ data class User (
     val username: String,
     val externalId: String,
     val name: String? = null,
+    val city: String? = null,
+    val street: String? = null,
+    val postcode: String? = null,
     val accountType: AccountType
 )

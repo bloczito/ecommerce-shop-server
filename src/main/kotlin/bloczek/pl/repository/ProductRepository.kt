@@ -53,6 +53,7 @@ class ProductRepository {
         id = row[Products.id],
         name = row[Products.name],
         price = row[Products.price].toDouble(),
+        url = row[Products.url],
         description = row[Products.description],
         brand = Brand(id = row[Brands.id], name = row[Brands.name]),
         category = row[Products.category],

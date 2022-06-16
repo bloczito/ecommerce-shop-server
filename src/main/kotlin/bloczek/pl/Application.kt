@@ -1,8 +1,6 @@
 package bloczek.pl
 
-import bloczek.pl.controller.authenticationRoutes
-import bloczek.pl.controller.categoriesRoutes
-import bloczek.pl.controller.productsRoutes
+import bloczek.pl.controller.*
 import bloczek.pl.db.DatabaseFactory
 import bloczek.pl.utils.diModule
 import com.auth0.jwt.JWT
@@ -61,7 +59,7 @@ fun Application.mainModule() {
                     requestMethod = HttpMethod.Post,
                     clientId = System.getenv("GOOGLE_CLIENT_ID"),
                     clientSecret = System.getenv("GOOGLE_CLIENT_SECRET"),
-                    defaultScopes = listOf("https://www.googleapis.com/auth/userinfo.profile")
+                    defaultScopes = listOf("https://www.googleapis.com/auth/userinfo.profile"),
                 )
             }
             client = HttpClient(CIO)
@@ -119,6 +117,14 @@ fun Application.mainModule() {
         productsRoutes()
         categoriesRoutes()
         authenticationRoutes()
+        paymentRoutes()
+
+        authenticate("auth-jwt") {
+            ordersRoutes()
+            usersRoute()
+        }
     }
+
+
 
 }

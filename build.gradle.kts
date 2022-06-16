@@ -49,6 +49,7 @@ dependencies {
     // Database
     implementation("org.jetbrains.exposed", "exposed-core", "0.38.1")
     implementation("org.jetbrains.exposed", "exposed-jdbc", "0.38.1")
+    implementation("org.jetbrains.exposed:exposed-java-time:0.38.1")
 //    implementation("com.h2database:h2:2.1.210")
 //    implementation("org.xerial:sqlite-jdbc:3.30.1")
     implementation("org.postgresql:postgresql:$postgresql_version")
@@ -63,6 +64,10 @@ dependencies {
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+
+    // Stripe
+    implementation("com.stripe:stripe-java:20.126.0")
+
 
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
