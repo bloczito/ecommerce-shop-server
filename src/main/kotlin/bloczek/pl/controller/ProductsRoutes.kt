@@ -19,7 +19,8 @@ import org.koin.java.KoinJavaComponent.inject
 class ProductsRoute(
     val category: Category? = null,
     val subcategory: Subcategory? = null,
-    val brandId: Int? = null
+    val brandId: Int? = null,
+    val random: Boolean? = null,
 ) {
 
     @Serializable
@@ -38,11 +39,23 @@ fun Route.productsRoutes() {
             println(user.payload)
         }
 
-        call.respond(productService.getProducts(
-            it.category,
-            it.subcategory,
-            it.brandId
-        ))
+        it.random?.run {
+            call.respond(
+                if (this)
+                    productService.getRandomProducts()
+                else
+                    productService.getProducts(
+                        it.category,
+                        it.subcategory,
+                        it.brandId
+                    ))
+        } ?: run {
+            call.respond(productService.getProducts(
+                it.category,
+                it.subcategory,
+                it.brandId
+            ))
+        }
     }
 
     get<ProductsRoute.Id> {

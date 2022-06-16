@@ -18,4 +18,5 @@ class ProductService(private val productRepo: ProductRepository) {
 
     suspend fun getById(id: Int): Product? = productRepo.getById(id)
 
+    suspend fun getRandomProducts(): List<Product> = productRepo.getRandomProducts()
 }
