@@ -6,11 +6,10 @@ import org.flywaydb.core.api.migration.Context
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class V1_6__create_users : BaseJavaMigration() {
+class V2_0__update_products : BaseJavaMigration() {
     override fun migrate(context: Context?) {
         transaction {
-            exec("CREATE TYPE AccountType AS ENUM ('GOOGLE' ,'GITHUB', 'DEFAULT')")
-            SchemaUtils.create(Users)
+            SchemaUtils.createMissingTablesAndColumns(Users)
         }
     }
 }

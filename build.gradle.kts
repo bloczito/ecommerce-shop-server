@@ -68,6 +68,8 @@ dependencies {
     // Stripe
     implementation("com.stripe:stripe-java:20.126.0")
 
+    implementation("org.mindrot:jbcrypt:0.4")
+
 
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")

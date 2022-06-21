@@ -34,6 +34,25 @@ class UserRepository {
         }[Users.id]
     }
 
+    suspend fun createDefaultUser(
+        username: String,
+        password: String,
+        name: String? = null,
+        city: String? = null,
+        street: String? = null,
+        postcode: String? = null
+    ) = dbQuery {
+        Users.insert {
+            it[Users.username] = username
+            it[Users.password] = password
+            it[Users.name] = name
+            it[Users.city] = city
+            it[Users.street] = street
+            it[Users.postcode] = postcode
+            it[Users.accountType] = AccountType.DEFAULT
+        }[Users.id]
+    }
+
     suspend fun updateUser(userId: Int, dto: UserDto): Int = dbQuery {
         Users.update({ Users.id eq userId }) {
             it[name] = dto.customerName
@@ -43,10 +62,36 @@ class UserRepository {
         }
     }
 
+    suspend fun getPassword(username: String): String? = dbQuery {
+        Users
+            .slice(Users.password)
+            .select(Users.username eq username)
+            .map { it[Users.password] }
+            .elementAtOrNull(0)
+    }
+
+    suspend fun getEmail(email: String): String? = dbQuery {
+        Users.slice(Users.username)
+            .select(Users.username eq email)
+            .map { it[Users.username] }
+            .elementAtOrNull(0)
+    }
+
+    suspend fun getUser(username: String, password: String): User? = dbQuery {
+        Users.select {
+            Users.username eq username
+            Users.password eq password
+        }
+            .map { mapUser(it) }
+            .elementAtOrNull(0)
+
+    }
+
 
     private fun mapUser(row: ResultRow) = User(
         id = row[Users.id],
         username = row[Users.username],
+        password = row[Users.password],
         externalId = row[Users.externalId],
         name = row[Users.name],
 
