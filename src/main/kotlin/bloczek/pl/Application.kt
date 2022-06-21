@@ -33,8 +33,11 @@ fun Application.mainModule() {
 
     install(CORS) {
         allowHost("localhost:3000") // frontendHost might be "*"
+        allowHost("localhost:3000/signIn") // frontendHost might be "*"
         allowMethod(HttpMethod.Put)
         allowMethod(HttpMethod.Delete)
+        allowMethod(HttpMethod.Options)
+        allowMethod(HttpMethod.Patch)
         allowHeader(HttpHeaders.Authorization)
         allowHeader(HttpHeaders.ContentType)
 //        allowHeader(HttpHeaders.AccessControlAllowOrigin)
@@ -47,6 +50,8 @@ fun Application.mainModule() {
     val issuer = environment.config.property("jwt.issuer").getString()
     val audience = environment.config.property("jwt.audience").getString()
     val myRealm = environment.config.property("jwt.realm").getString()
+
+    
 
     install(Authentication) {
         oauth ("auth-oauth-google") {

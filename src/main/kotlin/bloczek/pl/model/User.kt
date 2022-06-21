@@ -10,7 +10,8 @@ object Users: Table() {
     val id: Column<Int> = integer("user_id").autoIncrement()
 
     val username: Column<String> = varchar("username", 255)
-    val externalId: Column<String> = varchar("external_id", 255)
+    val password: Column<String?> = varchar("password", 255).nullable()
+    val externalId: Column<String?> = varchar("external_id", 255).nullable()
     val name: Column<String?> = varchar("name", 255).nullable()
 
     val city: Column<String?> = varchar("city", 255).nullable()
@@ -20,6 +21,10 @@ object Users: Table() {
     val accountType = postgresEnumeration<AccountType>("account_type", "AccountType")
 
     override val primaryKey = PrimaryKey(id, name = "PK_Users_Id")
+
+    init {
+        index(true, username)
+    }
 }
 
 
@@ -27,7 +32,8 @@ object Users: Table() {
 data class User (
     val id: Int,
     val username: String,
-    val externalId: String,
+    val password: String? = null,
+    val externalId: String? = null,
     val name: String? = null,
     val city: String? = null,
     val street: String? = null,

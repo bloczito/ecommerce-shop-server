@@ -1,7 +1,11 @@
 package bloczek.pl.controller
 
+import bloczek.pl.dto.SignInDto
+import bloczek.pl.dto.SignUpDto
 import bloczek.pl.enums.AccountType
+import bloczek.pl.model.User
 import bloczek.pl.service.UserService
+import bloczek.pl.utils.generateToken
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.client.*
@@ -13,6 +17,7 @@ import io.ktor.http.*
 import io.ktor.serialization.gson.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
@@ -56,13 +61,7 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
 
                 val user = userService.getOrCreateUser(userInfo.id, userInfo.name, AccountType.GOOGLE)
 
-                val token = JWT.create()
-                    .withAudience(audience)
-                    .withIssuer(issuer)
-                    .withClaim("username", user.username)
-                    .withClaim("userId", user.id)
-                    .withExpiresAt(Date(System.currentTimeMillis() + expirationTime))
-                    .sign(Algorithm.HMAC256(secret))
+                val token = generateToken(user, secret, issuer, audience, expirationTime)
 
 
                 call.response.cookies.append(
@@ -96,13 +95,7 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
 
                 val user = userService.getOrCreateUser(userInfo.id, userInfo.name ?: userInfo.login, AccountType.GITHUB)
 
-                val token = JWT.create()
-                    .withAudience(audience)
-                    .withIssuer(issuer)
-                    .withClaim("username", user.username)
-                    .withClaim("userId", user.id)
-                    .withExpiresAt(Date(System.currentTimeMillis() + expirationTime))
-                    .sign(Algorithm.HMAC256(secret))
+                val token = generateToken(user, secret, issuer, audience, expirationTime)
 
                 call.response.headers.append(HttpHeaders.AccessControlExposeHeaders, "Set-Cookie")
                 call.response.cookies.append(
@@ -122,7 +115,70 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
         }
     }
 
+    post("/signUp") {
+        val dto = call.receive<SignUpDto>()
+
+        dto.validate()?. run {
+            call.respond(HttpStatusCode.BadRequest, "Missing required fields: $this")
+        } ?: run {
+            val user = userService.createDefaultUser(dto).let { userService.getById(it) }
+
+//            val token = generateToken(user, secret, issuer, audience, expirationTime)
+//
+//            call.response.headers.append(HttpHeaders.AccessControlExposeHeaders, "Set-Cookie")
+//            call.response.cookies.append(
+//                Cookie(
+//                    "auth-token",
+//                    token,
+//                    CookieEncoding.URI_ENCODING,
+//                    expirationTime.toInt(),
+//                    path = "/"
+//                )
+//            )
+
+            call.respond(HttpStatusCode.Created)
+        }
+    }
+
+    post("/signIn") {
+        val dto = call.receive<SignInDto>()
+
+        dto.validate()?.run {
+            call.respond(HttpStatusCode.BadRequest, "Missing required fields: $this")
+        } ?: run {
+            userService.signIn(dto.email, dto.password)?.run {
+                val token = generateToken(this, secret, issuer, audience, expirationTime)
+
+                call.response.headers.append(HttpHeaders.AccessControlExposeHeaders, "Set-Cookie")
+                call.response.cookies.append(
+                    Cookie(
+                        "auth-token",
+                        token,
+                        CookieEncoding.URI_ENCODING,
+                        expirationTime.toInt(),
+                        path = "/signUp"
+                    )
+                )
+
+                call.respond(token)
+//                call.respondRedirect("http://localhost:3000")
+
+            } ?: run {
+                call.respond(HttpStatusCode.Unauthorized)
+            }
+        }
+    }
+
+    get("/isEmailAvailable") {
+        call.parameters["email"]?.run {
+            call.respond(userService.isEmailAvailable(this))
+        } ?: run {
+            call.respond(HttpStatusCode.BadRequest)
+        }
+    }
 }
+
+
 
 @Serializable
 data class UserInfo(
