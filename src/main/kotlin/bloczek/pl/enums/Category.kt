@@ -1,8 +1,7 @@
 package bloczek.pl.enums
 
-enum class Category(
-    val title: String
-) {
+enum class Category( val title: String ) {
+
     T_SHIRTS("T-shirty") {
         override fun getSubcategories(): List<Subcategory> =
             listOf(Subcategory.T_SHIRT, Subcategory.LONG_SLEEVE, Subcategory.POLO)
