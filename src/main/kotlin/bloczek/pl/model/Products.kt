@@ -11,7 +11,7 @@ object Products : Table() {
     val id: Column<Int> = integer("product_id").autoIncrement()
     val name: Column<String> = varchar("name", 255)
 
-    val description: Column<String> = text("description")
+    val description: Column<String?> = text("description").nullable()
     val price: Column<BigDecimal> = decimal("price", 6, 2)
     val url: Column<String> = varchar("url", 255)
     val brandId: Column<Int> = reference("brand_id", Brands.id)
