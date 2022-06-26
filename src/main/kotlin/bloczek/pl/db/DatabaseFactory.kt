@@ -37,6 +37,7 @@ object DatabaseFactory {
         val flyway = Flyway.configure()
             .dataSource(datasource)
             .locations("bloczek/pl/db/migrations")
+            .lockRetryCount(100)
             .load()
         try {
             flyway.info()

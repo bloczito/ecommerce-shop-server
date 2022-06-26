@@ -1,6 +1,5 @@
 package bloczek.pl.model
 
-import bloczek.pl.db.postgresEnumeration
 import bloczek.pl.enums.AccountType
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
@@ -18,7 +17,7 @@ object Users: Table() {
     val street: Column<String?> = varchar("street", 255).nullable()
     val postcode: Column<String?> = varchar("postcode", 255).nullable()
 
-    val accountType = postgresEnumeration<AccountType>("account_type", "AccountType")
+    val accountType = enumeration<AccountType>("account_type")
 
     override val primaryKey = PrimaryKey(id, name = "PK_Users_Id")
 

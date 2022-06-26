@@ -1,6 +1,5 @@
 package bloczek.pl.model
 
-import bloczek.pl.db.postgresEnumeration
 import bloczek.pl.enums.Category
 import bloczek.pl.enums.Subcategory
 import org.jetbrains.exposed.sql.Column
@@ -16,8 +15,8 @@ object Products : Table() {
     val url: Column<String> = varchar("url", 255)
     val brandId: Column<Int> = reference("brand_id", Brands.id)
 
-    val category = postgresEnumeration<Category>("category", "Category")
-    val subcategory = postgresEnumeration<Subcategory>("subcategory", "Subcategory")
+    val category = enumeration<Category>("category" )
+    val subcategory = enumeration<Subcategory>("subcategory")
 
     override val primaryKey = PrimaryKey(id, name="PK_Products_Id")
 }

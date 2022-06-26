@@ -51,8 +51,8 @@ dependencies {
     implementation("org.jetbrains.exposed", "exposed-jdbc", "0.38.1")
     implementation("org.jetbrains.exposed:exposed-java-time:0.38.1")
 //    implementation("com.h2database:h2:2.1.210")
-//    implementation("org.xerial:sqlite-jdbc:3.30.1")
-    implementation("org.postgresql:postgresql:$postgresql_version")
+    implementation("org.xerial:sqlite-jdbc:3.36.0.3")
+//    implementation("org.postgresql:postgresql:$postgresql_version")
     implementation("com.zaxxer:HikariCP:$hikariCpVersion")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
 
