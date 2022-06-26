@@ -12,7 +12,7 @@ import io.ktor.server.routing.*
 
 fun Route.paymentRoutes() {
 
-    Stripe.apiKey = System.getenv("STRIPE_API_KEY")
+    Stripe.apiKey = System.getenv("STRIPE_SECRET_KEY")
 
     post("/createPayment") {
         val dto = call.receive<CreatePaymentDto>()

@@ -1,6 +1,7 @@
 package bloczek.pl.controller
 
 import bloczek.pl.dto.UserDto
+import bloczek.pl.enums.AccountType
 import bloczek.pl.service.UserService
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -22,7 +23,13 @@ fun Route.usersRoute() {
 
             principal?.getClaim("userId", Int::class)?.run {
                 val user = userService.getById(this).let {
-                    UserDto(it.name, it.city, it.street, it.postcode)
+                    UserDto(
+                        customerName = it.name,
+                        email = if (!it.username.startsWith(AccountType.GITHUB.serviceName) || !it.username.startsWith(AccountType.GOOGLE.serviceName)) it.username else null,
+                        city = it.city,
+                        street = it.street,
+                        postcode = it.postcode
+                    )
                 }
                 call.respond(user)
             } ?: run {
