@@ -17,7 +17,7 @@ object Users: Table() {
     val street: Column<String?> = varchar("street", 255).nullable()
     val postcode: Column<String?> = varchar("postcode", 255).nullable()
 
-    val accountType = enumeration<AccountType>("account_type")
+    val accountType = enumerationByName<AccountType>("account_type", 255)
 
     override val primaryKey = PrimaryKey(id, name = "PK_Users_Id")
 

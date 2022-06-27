@@ -15,8 +15,8 @@ object Products : Table() {
     val url: Column<String> = varchar("url", 255)
     val brandId: Column<Int> = reference("brand_id", Brands.id)
 
-    val category = enumeration<Category>("category" )
-    val subcategory = enumeration<Subcategory>("subcategory")
+    val category = enumerationByName<Category>("category", 255 )
+    val subcategory = enumerationByName<Subcategory>("subcategory", 255)
 
     override val primaryKey = PrimaryKey(id, name="PK_Products_Id")
 }

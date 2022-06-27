@@ -4,7 +4,12 @@ WORKDIR /home/gradle/src
 RUN gradle shadowJar --no-daemon
 
 FROM openjdk:11
+
+WORKDIR /app
+
+
+COPY loader.sql .
+
 EXPOSE 8080:8080
-RUN mkdir /app
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/ktor-docker-sample.jar
 ENTRYPOINT ["java","-jar","/app/ktor-docker-sample.jar"]

@@ -18,7 +18,7 @@ object DatabaseFactory {
         log.info("Initialising database")
         val pool = hikari(config)
         Database.connect(pool)
-        runFlyway(pool)
+//        runFlyway(pool)
     }
 
     private fun hikari(appConfig: ApplicationConfig): HikariDataSource {
