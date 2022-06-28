@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v1
       with:
         registry: https://shopp.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_5571ee0608c4480fabc140f4edaa3a6f }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_f3b07ba81c89431290de8d697ff57087 }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_e9e758aefe1e4231b08283db823aef06 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_e08455db8ed74dbba53054a486c9e29e }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: shopp.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_5571ee0608c4480fabc140f4edaa3a6f }}/shopp-server:${{ github.sha }}
+        tags: shopp.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_e9e758aefe1e4231b08283db823aef06 }}/shopp-server:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'shopp-server'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_5cc453d233644737a2099d7c149187c3 }}
-        images: 'shopp.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_5571ee0608c4480fabc140f4edaa3a6f }}/shopp-server:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_f1d70d2041e6493c9e17f1f5f1eda27b }}
+        images: 'shopp.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_e9e758aefe1e4231b08283db823aef06 }}/shopp-server:${{ github.sha }}'
