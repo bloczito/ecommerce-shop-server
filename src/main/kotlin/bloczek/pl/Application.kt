@@ -32,8 +32,8 @@ fun Application.mainModule() {
     }
 
     install(CORS) {
-        allowHost("localhost:3000") // frontendHost might be "*"
-        allowHost("localhost:3000/signIn") // frontendHost might be "*"
+        allowHost("shopp-app.azurewebsites.net", schemes = listOf("http", "https")) // frontendHost might be "*"
+        allowHost("shopp-app.azurewebsites.net/signIn", schemes = listOf("http", "https")) // frontendHost might be "*"
         allowMethod(HttpMethod.Put)
         allowMethod(HttpMethod.Delete)
         allowMethod(HttpMethod.Options)
