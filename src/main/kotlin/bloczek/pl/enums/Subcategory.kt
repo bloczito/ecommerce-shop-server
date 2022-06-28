@@ -4,12 +4,13 @@ enum class Subcategory(
     val title: String
 ) {
     // SWEATSHIRTS
-    HOODIE("Z kapturem"),
+    HOODIE("Hoodie"),
     CRAWNECK("Bez kaptura"),
 
     // T-SHIRTS
     T_SHIRT("Z krótkim rękawem"),
-    LONG_SLEEVE("Z długim rękawem"),
+//    LONG_SLEEVE("Z długim rękawem"),
+    LONG_SLEEVE("Longsleeve"),
     POLO("Polo"),
 
     // TROUSERS
