@@ -43,7 +43,7 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
     val audience = environment!!.config.property("jwt.audience").getString()
     val expirationTime = environment!!.config.property("jwt.expirationTime").getString().toLong()
 
-    val FRONTEND_URL = "https://shopp-app.azurewebsites.net"
+    val clientUrl = environment!!.config.property("url.client").getString()
 
     authenticate("auth-oauth-google") {
         get("/login") {
@@ -74,7 +74,7 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
                     )
                 )
 
-                call.respondRedirect(FRONTEND_URL)
+                call.respondRedirect(clientUrl)
             } ?: run {
                 call.respond(HttpStatusCode.Unauthorized, "ELO")
             }
@@ -109,7 +109,7 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
                     )
                 )
 
-                call.respondRedirect(FRONTEND_URL)
+                call.respondRedirect(clientUrl)
             } ?: run {
                 call.respond(HttpStatusCode.Unauthorized, "NAURA")
             }
@@ -162,7 +162,7 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
                 )
 
                 call.respond(token)
-//                call.respondRedirect(FRONTEND_URL")
+//                call.respondRedirect(clientUrl")
 
             } ?: run {
                 call.respond(HttpStatusCode.Unauthorized)

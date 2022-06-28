@@ -33,7 +33,7 @@ fun Application.mainModule() {
 
     install(CORS) {
         allowHost("shopp-app.azurewebsites.net", schemes = listOf("http", "https")) // frontendHost might be "*"
-        allowHost("shopp-app.azurewebsites.net/signIn", schemes = listOf("http", "https")) // frontendHost might be "*"
+        allowHost("localhost:3000", schemes = listOf("http", "https")) // frontendHost might be "*"
         allowMethod(HttpMethod.Put)
         allowMethod(HttpMethod.Delete)
         allowMethod(HttpMethod.Options)
@@ -51,11 +51,12 @@ fun Application.mainModule() {
     val audience = environment.config.property("jwt.audience").getString()
     val myRealm = environment.config.property("jwt.realm").getString()
 
+    val serverUrl = environment.config.property("url.server").getString()
     
 
     install(Authentication) {
         oauth ("auth-oauth-google") {
-            urlProvider = { "http://localhost:8080/authenticated" }
+            urlProvider = { "$serverUrl/authenticated" }
             providerLookup = {
                 OAuthServerSettings.OAuth2ServerSettings(
                     name = "google",
@@ -71,7 +72,7 @@ fun Application.mainModule() {
         }
 
         oauth ("auth-oauth-github") {
-            urlProvider = { "http://localhost:8080/authenticated/github" }
+            urlProvider = { "$serverUrl/authenticated/github" }
             providerLookup = {
                 OAuthServerSettings.OAuth2ServerSettings(
                     name = "github",
