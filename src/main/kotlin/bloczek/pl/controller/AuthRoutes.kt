@@ -65,16 +65,16 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
                 val token = generateToken(user, secret, issuer, audience, expirationTime)
 
 
-                call.response.cookies.append(
-                    Cookie(
-                        "auth-token",
-                        token,
-                        CookieEncoding.URI_ENCODING,
-                        expirationTime.toInt(),
-                    )
-                )
+//                call.response.cookies.append(
+//                    Cookie(
+//                        "auth-token",
+//                        token,
+//                        CookieEncoding.URI_ENCODING,
+//                        expirationTime.toInt(),
+//                    )
+//                )
 
-                call.respondRedirect(clientUrl)
+                call.respondRedirect("$clientUrl?token=$token")
             } ?: run {
                 call.respond(HttpStatusCode.Unauthorized, "ELO")
             }
@@ -99,17 +99,17 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
                 val token = generateToken(user, secret, issuer, audience, expirationTime)
 
                 call.response.headers.append(HttpHeaders.AccessControlExposeHeaders, "Set-Cookie")
-                call.response.cookies.append(
-                    Cookie(
-                        "auth-token",
-                        token,
-                        CookieEncoding.URI_ENCODING,
-                        expirationTime.toInt(),
-                        path = "/"
-                    )
-                )
+//                call.response.cookies.append(
+//                    Cookie(
+//                        "auth-token",
+//                        token,
+//                        CookieEncoding.URI_ENCODING,
+//                        expirationTime.toInt(),
+//                        path = "/"
+//                    )
+//                )
 
-                call.respondRedirect(clientUrl)
+                call.respondRedirect("$clientUrl?token=$token")
             } ?: run {
                 call.respond(HttpStatusCode.Unauthorized, "NAURA")
             }
@@ -122,21 +122,7 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
         dto.validate()?. run {
             call.respond(HttpStatusCode.BadRequest, "Missing required fields: $this")
         } ?: run {
-            val user = userService.createDefaultUser(dto).let { userService.getById(it) }
-
-//            val token = generateToken(user, secret, issuer, audience, expirationTime)
-//
-//            call.response.headers.append(HttpHeaders.AccessControlExposeHeaders, "Set-Cookie")
-//            call.response.cookies.append(
-//                Cookie(
-//                    "auth-token",
-//                    token,
-//                    CookieEncoding.URI_ENCODING,
-//                    expirationTime.toInt(),
-//                    path = "/"
-//                )
-//            )
-
+            userService.createDefaultUser(dto).let { userService.getById(it) }
             call.respond(HttpStatusCode.Created)
         }
     }
@@ -162,8 +148,6 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
                 )
 
                 call.respond(token)
-//                call.respondRedirect(clientUrl")
-
             } ?: run {
                 call.respond(HttpStatusCode.Unauthorized)
             }

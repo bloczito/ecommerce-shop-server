@@ -25,7 +25,7 @@ fun Route.usersRoute() {
                 val user = userService.getById(this).let {
                     UserDto(
                         customerName = it.name,
-                        email = if (!it.username.startsWith(AccountType.GITHUB.serviceName) || !it.username.startsWith(AccountType.GOOGLE.serviceName)) it.username else null,
+                        email = if (it.username.startsWith(AccountType.GITHUB.serviceName) || it.username.startsWith(AccountType.GOOGLE.serviceName)) null else it.username,
                         city = it.city,
                         street = it.street,
                         postcode = it.postcode
