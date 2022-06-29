@@ -70,7 +70,8 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
                         "auth-token",
                         token,
                         CookieEncoding.URI_ENCODING,
-                        expirationTime.toInt()
+                        expirationTime.toInt(),
+                        path = clientUrl
                     )
                 )
 
@@ -105,7 +106,7 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
                         token,
                         CookieEncoding.URI_ENCODING,
                         expirationTime.toInt(),
-                        path = "/"
+                        path = clientUrl
                     )
                 )
 
