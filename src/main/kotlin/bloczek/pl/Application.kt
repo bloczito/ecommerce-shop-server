@@ -40,6 +40,9 @@ fun Application.mainModule() {
         allowMethod(HttpMethod.Patch)
         allowHeader(HttpHeaders.Authorization)
         allowHeader(HttpHeaders.ContentType)
+        allowHeader(HttpHeaders.AccessControlAllowCredentials)
+        allowHeader(HttpHeaders.AccessControlAllowOrigin)
+        allowHeader(HttpHeaders.AccessControlAllowHeaders)
 //        allowHeader(HttpHeaders.AccessControlAllowOrigin)
 //        allowNonSimpleContentTypes = true
 //        allowCredentials = true
