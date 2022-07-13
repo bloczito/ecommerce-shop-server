@@ -14,7 +14,7 @@ fun Route.paymentRoutes() {
 
     Stripe.apiKey = System.getenv("STRIPE_SECRET_KEY")
 
-    post("/createPayment") {
+    post("/payments") {
         val dto = call.receive<CreatePaymentDto>()
 
         val paymentParams: PaymentIntentCreateParams = PaymentIntentCreateParams.builder()

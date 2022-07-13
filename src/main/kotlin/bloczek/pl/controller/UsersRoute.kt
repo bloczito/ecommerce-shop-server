@@ -17,7 +17,7 @@ fun Route.usersRoute() {
 
     val userService: UserService by inject(UserService::class.java)
 
-    route("/user") {
+    route("/users") {
         get {
             val principal = call.principal<JWTPrincipal>()
 
@@ -37,7 +37,7 @@ fun Route.usersRoute() {
             }
         }
 
-        post {
+        put {
             val principal = call.principal<JWTPrincipal>()
             val body = call.receive<UserDto>()
 

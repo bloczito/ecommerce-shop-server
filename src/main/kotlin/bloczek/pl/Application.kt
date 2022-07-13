@@ -59,7 +59,7 @@ fun Application.mainModule() {
 
     install(Authentication) {
         oauth ("auth-oauth-google") {
-            urlProvider = { "$serverUrl/authenticated" }
+            urlProvider = { "$serverUrl/authenticated/google" }
             providerLookup = {
                 OAuthServerSettings.OAuth2ServerSettings(
                     name = "google",

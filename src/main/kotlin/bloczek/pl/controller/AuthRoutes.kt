@@ -46,11 +46,11 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
     val clientUrl = environment!!.config.property("url.client").getString()
 
     authenticate("auth-oauth-google") {
-        get("/login") {
+        get("/login/google") {
             call.parameters.apply {  }
         }
 
-        get("/authenticated") {
+        get("/authenticated/google") {
             val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
 
             principal?.let {
@@ -64,15 +64,6 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
 
                 val token = generateToken(user, secret, issuer, audience, expirationTime)
 
-
-//                call.response.cookies.append(
-//                    Cookie(
-//                        "auth-token",
-//                        token,
-//                        CookieEncoding.URI_ENCODING,
-//                        expirationTime.toInt(),
-//                    )
-//                )
 
                 call.respondRedirect("$clientUrl?token=$token")
             } ?: run {
@@ -116,7 +107,7 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
         }
     }
 
-    post("/signUp") {
+    post("/sign_up") {
         val dto = call.receive<SignUpDto>()
 
         dto.validate()?. run {
@@ -127,7 +118,7 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
         }
     }
 
-    post("/signIn") {
+    post("/sign_in") {
         val dto = call.receive<SignInDto>()
 
         dto.validate()?.run {
@@ -154,7 +145,7 @@ fun Route.authenticationRoutes(httpClient: HttpClient = asd) {
         }
     }
 
-    get("/isEmailAvailable") {
+    get("/is_email_available") {
         call.parameters["email"]?.run {
             call.respond(userService.isEmailAvailable(this))
         } ?: run {
